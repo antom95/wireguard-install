@@ -8,6 +8,9 @@ ORANGE='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+# Set WireGuard interface from first parameter or use default wg0
+SERVER_WG_NIC=${1:-wg0}
+
 function isRoot() {
 	if [ "${EUID}" -ne 0 ]; then
 		echo "You need to run this script as root"
@@ -124,7 +127,7 @@ function installQuestions() {
 	done
 
 	until [[ ${SERVER_WG_NIC} =~ ^[a-zA-Z0-9_]+$ && ${#SERVER_WG_NIC} -lt 16 ]]; do
-		read -rp "WireGuard interface name: " -e -i wg0 SERVER_WG_NIC
+		read -rp "WireGuard interface name: " -e -i "${SERVER_WG_NIC}" SERVER_WG_NIC
 	done
 
 	until [[ ${SERVER_WG_IPV4} =~ ^([0-9]{1,3}\.){3} ]]; do
